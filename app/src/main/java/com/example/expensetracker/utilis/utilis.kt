@@ -19,4 +19,18 @@ object utilis {
             0L
         }
     }
+
+     fun isFormValid(
+        name: String,
+        amount: String,
+        category: String,
+        type: String,
+        date: Long
+    ): Boolean {
+        return name.isNotBlank() &&
+                amount.isNotBlank() &&
+                category.isNotBlank() &&
+                type.isNotBlank() &&
+                date != 0L
+    }
 }

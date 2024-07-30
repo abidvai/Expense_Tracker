@@ -1,5 +1,6 @@
 package com.example.expensetracker.Presentation
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -59,12 +60,14 @@ import com.example.expensetracker.ViewModel.AddExpenseViewModelFactory
 import com.example.expensetracker.ViewModel.HomeScreenViewModel
 import com.example.expensetracker.data.model.ExpenseEntity
 import com.example.expensetracker.utilis.utilis
+import com.example.expensetracker.utilis.utilis.isFormValid
 import kotlinx.coroutines.launch
 
 @Composable
 fun AddExpenseScreen(navController: NavHostController) {
 
-    val viewModel = AddExpenseViewModelFactory(LocalContext.current).create(AddExpenseViewModel::class.java)
+    val viewModel =
+        AddExpenseViewModelFactory(LocalContext.current).create(AddExpenseViewModel::class.java)
 
     val corutine = rememberCoroutineScope()
     Scaffold { innerpadding ->
@@ -147,6 +150,7 @@ fun ExpenseAddCard(modifier: Modifier, onAddExpenseClick: (model: ExpenseEntity)
     val category = rememberSaveable {
         mutableStateOf("")
     }
+    val context = LocalContext.current
 
     Column(
         modifier
@@ -239,7 +243,8 @@ fun ExpenseAddCard(modifier: Modifier, onAddExpenseClick: (model: ExpenseEntity)
                 Text(text = "Date Picker", fontSize = 20.sp, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .clickable {
                             dateDialogVisible.value = true
                         },
@@ -264,15 +269,28 @@ fun ExpenseAddCard(modifier: Modifier, onAddExpenseClick: (model: ExpenseEntity)
                 Spacer(modifier = Modifier.height(10.dp))
                 Button(
                     onClick = {
-                        val model = ExpenseEntity(
-                            id = null,
-                            name = name.value,
-                            amount.value.toDoubleOrNull() ?: 0.0,
-                            date = utilis.HumanReadableDate(date.longValue),
-                            category = category.value,
-                            type = typeSelected.value
-                        )
-                        onAddExpenseClick(model)
+                        if (isFormValid(
+                                name = name.value,
+                                amount = amount.value,
+                                category = category.value,
+                                type = typeSelected.value,
+                                date = date.longValue
+                            )
+                        ) {
+                            val model = ExpenseEntity(
+                                id = null,
+                                name = name.value,
+                                amount.value.toDoubleOrNull() ?: 0.0,
+                                date = utilis.HumanReadableDate(date.longValue),
+                                category = category.value,
+                                type = typeSelected.value
+                            )
+                            onAddExpenseClick(model)
+                            Toast.makeText(context, "Expense Added", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(context, "Please fill all fields", Toast.LENGTH_SHORT)
+                                .show()
+                        }
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {

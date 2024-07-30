@@ -345,20 +345,24 @@ fun UpdateExpenseScreen(
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(
                     onClick = {
-                        coroutineScope.launch {
-                            expense?.let {
-                                viewModel.updateExpense(
-                                    it.copy(
-                                        name = name,
-                                        amount = amount.toDoubleOrNull() ?: 0.0,
-                                        date = utilis.HumanReadableDate(dateMillis.longValue),
-                                        category = category,
-                                        type = typeSelected.value
+                        if(name.isNotBlank() && amount.isNotBlank() && date.isNotBlank() && category.isNotBlank()){
+                            coroutineScope.launch {
+                                expense?.let {
+                                    viewModel.updateExpense(
+                                        it.copy(
+                                            name = name,
+                                            amount = amount.toDoubleOrNull() ?: 0.0,
+                                            date = utilis.HumanReadableDate(dateMillis.longValue),
+                                            category = category,
+                                            type = typeSelected.value
+                                        )
                                     )
-                                )
+                                }
+                                navController.popBackStack()
+                                Toast.makeText(context,"Expense Updated Successfully",Toast.LENGTH_SHORT).show()
                             }
-                            navController.popBackStack()
-                            Toast.makeText(context,"Expense Updated Successfully",Toast.LENGTH_SHORT).show()
+                        }else{
+                            Toast.makeText(context,"Please fill all the fields",Toast.LENGTH_SHORT).show()
                         }
                     },
                     modifier = Modifier
