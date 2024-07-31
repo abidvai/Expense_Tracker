@@ -14,8 +14,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material.icons.outlined.RemoveRedEye
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -27,13 +32,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -49,8 +58,14 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
     val authState = authViewModel.user.observeAsState()
     val context = LocalContext.current
 
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    var email by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+    var passwordVisibility by rememberSaveable {
+        mutableStateOf(false)
+    }
+    var passwordEye by rememberSaveable {
+        mutableStateOf(false)
+    }
 
     Box(
         modifier = Modifier
@@ -102,9 +117,11 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
                     AuthStatus.Unauthenticated -> Unit
                     null -> Unit
                 }
-                Text(text = "Login to Your Expense Tracker App\n Save more \n control Your Expense",
+                Text(
+                    text = "Login to Your Expense Tracker App\n Save more \n control Your Expense",
                     fontSize = 17.sp,
-                    color = Color.Blue)
+                    color = Color.Blue
+                )
                 Spacer(modifier = Modifier.height(20.dp))
                 OutlinedTextField(value = email, onValueChange = {
                     email = it
@@ -113,16 +130,31 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
                         Text(text = "Email")
                     })
                 Spacer(modifier = Modifier.height(20.dp))
-                OutlinedTextField(value = password, onValueChange = {
-                    password = it
-                },
+                OutlinedTextField(
+                    value = password,
+                    onValueChange = {
+                        password = it
+                    },
                     label = {
                         Text(text = "Password")
-                    })
+                    },
+                    trailingIcon = {
+                        val image =
+                            if (passwordEye) Icons.Outlined.Lock else Icons.Outlined.RemoveRedEye
+                        IconButton(onClick = {
+                            passwordEye = !passwordEye
+                            passwordVisibility = !passwordVisibility
+                        }) {
+                            Icon(image, contentDescription = null)
+                        }
+                    },
+                    visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation()
+                )
                 Spacer(modifier = Modifier.height(20.dp))
-                OutlinedButton(onClick = {
-                    authViewModel.logIn(email, password)
-                },
+                OutlinedButton(
+                    onClick = {
+                        authViewModel.logIn(email, password)
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 50.dp),
@@ -130,9 +162,11 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
                         containerColor = Color.Blue
                     )
                 ) {
-                    Text(text = "Login",
+                    Text(
+                        text = "Login",
                         fontWeight = FontWeight.Bold,
-                        color = Color.White)
+                        color = Color.White
+                    )
                 }
                 Row(
                     modifier = Modifier.fillMaxWidth(),
