@@ -30,6 +30,9 @@ sealed class Routes(val route: String) {
             return "update_expense/$expenseId"
         }
     }
+    object HomePage : Routes("home")
+    object SignUpPage : Routes("signUp")
+    object LoginPage : Routes("login")
 }
 
 

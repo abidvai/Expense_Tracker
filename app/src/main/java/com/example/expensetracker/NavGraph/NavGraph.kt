@@ -1,6 +1,5 @@
 package com.example.expensetracker.NavGraph
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -14,14 +13,17 @@ import com.example.expensetracker.Presentation.HomeScreen
 import com.example.expensetracker.Presentation.ProfileScreen
 import com.example.expensetracker.Presentation.UpdateExpenseScreen
 import com.example.expensetracker.ViewModel.AddExpenseViewModel
+import com.example.expensetracker.ViewModel.AuthViewModel
+import com.example.firebaseauth.LoginPage
+import com.example.firebaseauth.SignUpPage
 
 @Composable
-fun NavGraph(viewModel: AddExpenseViewModel) {
+fun NavGraph(viewModel: AddExpenseViewModel, authViewModel: AuthViewModel) {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = Routes.Home.route) {
+    NavHost(navController = navController, startDestination = Routes.LoginPage.route) {
         composable(Routes.Home.route) {
-            HomeScreen(navController)
+            HomeScreen(navController, authViewModel)
         }
         composable(Routes.AddExpense.route) {
             AddExpenseScreen(navController)
@@ -60,6 +62,12 @@ fun NavGraph(viewModel: AddExpenseViewModel) {
         ) { backStackEntry ->
             val expenseId = backStackEntry.arguments?.getInt("expenseId") ?: -1
             UpdateExpenseScreen(navController = navController, viewModel = viewModel, expenseId = expenseId)
+        }
+        composable(Routes.LoginPage.route) {
+            LoginPage(navController,authViewModel)
+        }
+        composable(Routes.SignUpPage.route){
+            SignUpPage(navController,authViewModel)
         }
     }
 }

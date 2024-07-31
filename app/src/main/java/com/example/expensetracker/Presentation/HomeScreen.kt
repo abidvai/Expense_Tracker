@@ -46,12 +46,16 @@ import com.example.expensetracker.NavGraph.Routes.Routes
 import com.example.expensetracker.R
 import com.example.expensetracker.ViewModel.AddExpenseViewModel
 import com.example.expensetracker.ViewModel.AddExpenseViewModelFactory
+import com.example.expensetracker.ViewModel.AuthViewModel
 import com.example.expensetracker.ViewModel.HomeScreenViewModel
 import com.example.expensetracker.ViewModel.HomeScreenViewModelFactory
 
 @Preview(showSystemUi = true)
 @Composable
-fun HomeScreen(navController: NavHostController = rememberNavController()) {
+fun HomeScreen(
+    navController: NavHostController = rememberNavController(),
+    authViewModel: AuthViewModel
+) {
 
     val context = LocalContext.current
     val viewModel = HomeScreenViewModelFactory(LocalContext.current).create(HomeScreenViewModel::class.java)
