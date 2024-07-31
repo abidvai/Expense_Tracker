@@ -54,7 +54,7 @@ fun NavGraph(viewModel: AddExpenseViewModel, authViewModel: AuthViewModel) {
             )
         }
         composable(Routes.ProfileScreen.route) {
-            ProfileScreen(navController)
+            ProfileScreen(navController,authViewModel)
         }
         composable(
             "${Routes.UpdateExpense.route}/{expenseId}",
