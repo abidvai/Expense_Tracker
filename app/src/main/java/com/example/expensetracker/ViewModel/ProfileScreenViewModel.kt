@@ -1,11 +1,8 @@
 package com.example.expensetracker.ViewModel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.expensetracker.Repository.ExpenseRepository
 import com.example.expensetracker.Repository.ProfileRepository
-import com.example.expensetracker.data.ExpenseDatabase
 import com.example.expensetracker.data.model.ProfileEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch

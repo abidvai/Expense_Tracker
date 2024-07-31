@@ -41,7 +41,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.expensetracker.R
 import com.example.expensetracker.ViewModel.AddExpenseViewModel
-import com.example.expensetracker.ViewModel.HomeScreenViewModel
 import com.example.expensetracker.data.model.ExpenseEntity
 import com.example.expensetracker.ui.theme.greenColor
 import kotlinx.coroutines.launch
